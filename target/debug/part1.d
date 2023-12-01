@@ -1,0 +1,1 @@
+/home/auriel/Programming/Rust/advent_of_code/AdventOfCode2023/target/debug/part1: /home/auriel/Programming/Rust/advent_of_code/AdventOfCode2023/day-1/src/bin/input.txt /home/auriel/Programming/Rust/advent_of_code/AdventOfCode2023/day-1/src/bin/part1.rs

@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-
 #[tracing::instrument]
 pub fn process(input: &str) -> String {
     let input_lines : Vec<&str> = input.lines().collect();
@@ -17,46 +16,23 @@ pub fn process(input: &str) -> String {
             let max = i32::min((line.len() + index) as i32 - 1, (end + index) as i32) as usize;
             //println!("min: {min}, max: {max}");
             
+            let num = if line.len() <= end {
+                line[start..].to_string()
+            } else {
+                line[start..end].to_string()
+            };
+            
             let bellow = i32::max(0, i as i32 - 1) as usize;
-            if let Some(gear) = input_lines[bellow][min..=max].find(|c: char| !c.is_numeric() && c != '.') {
-
-                let num = if line.len() <= end {
-                    line[start..].to_string()
-                } else {
-                    line[start..end].to_string()
-                };
-
-                let key = (bellow, gear + min);
-                if let std::collections::hash_map::Entry::Vacant(e) = map.entry(key) {
-                    e.insert(vec!(num.parse::<usize>().unwrap()));
-                } else {
-                    map.get_mut(&key).unwrap().push(num.parse().unwrap());
-                }
-
-            }
-            if let Some(gear) = input_lines[i][min..=max].find(|c: char| !c.is_numeric() && c != '.') {
-                let num = if line.len() <= end {
-                    line[start..].to_string()
-                } else {
-                    line[start..end].to_string()
-                };
-
-                let key = (i, gear + min);
-                if let std::collections::hash_map::Entry::Vacant(e) = map.entry(key) {
-                    e.insert(vec!(num.parse::<usize>().unwrap()));
-                } else {
-                    map.get_mut(&key).unwrap().push(num.parse().unwrap());
-                }
-            }
             let above = usize::min(input_lines.len() - 1, i + 1);
-            if let Some(gear) = input_lines[above][min..=max].find(|c: char| !c.is_numeric() && c != '.') {
-                let num = if line.len() <= end {
-                    line[start..].to_string()
-                } else {
-                    line[start..end].to_string()
-                };
+            let data = if let Some(gear) = input_lines[bellow][min..=max].find(|c: char| !c.is_numeric() && c != '.') {
+                Some((gear, bellow))
+            } else if let Some(gear) = input_lines[above][min..=max].find(|c: char| !c.is_numeric() && c != '.') {
+                Some((gear, above))
+            } else { input_lines[i][min..=max].find(|c: char| !c.is_numeric() && c != '.').map(|gear| (gear, i)) };
+            
 
-                let key = (above, gear + min);
+            if let Some((gear, line_n)) = data {
+                let key = (line_n, gear + min);
                 if let std::collections::hash_map::Entry::Vacant(e) = map.entry(key) {
                     e.insert(vec!(num.parse::<usize>().unwrap()));
                 } else {
@@ -72,8 +48,6 @@ pub fn process(input: &str) -> String {
             index += end;
         }
     }
-
-    //println!("{:?}", map);
 
     let mut sum: usize = 0;
     for item in map.values() {

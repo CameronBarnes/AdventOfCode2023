@@ -5,7 +5,7 @@ work day:
 
 create day:
 		cargo generate --path ./daily-template --name day-{{day}}
-		bash -c "curl 'https://adventofcode.com/$YEAR/day/{{day}}/input' -H 'cookie: session=$AOC_SESSION' --compressed > day-{{day}}/input.txt"
+		bash -c "curl 'https://adventofcode.com/$YEAR/day/{{day}}/input' -H 'cookie: session=$AOC_SESSION' -H 'user-agent: one time download script. Author: cameron_barnes@outlook.com' --compressed > day-{{day}}/input.txt"
 
 bench-all:
 		cargo bench -q > benchmarks.txt

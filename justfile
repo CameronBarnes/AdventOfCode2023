@@ -12,6 +12,9 @@ bench-all:
 bench day part:
 		cargo bench --bench day-{{day}}-bench part{{part}} >> day-{{day}}.bench.txt
 
+flamegraph day part:
+		cargo flamegraph --profile flamegraph --root --package day-{{day}} --bin part{{part}} -o flamegraphs/day-{{day}}--part{{part}}.svg
+
 test-all:
 		cargo nextest r
 test day part:

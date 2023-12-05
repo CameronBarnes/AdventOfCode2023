@@ -51,9 +51,10 @@ fn map(maps: &[ValMap], input: usize) -> usize {
 pub fn process(input: &str) -> String {
 
     let mut iter = input.split("\n\n");
-    let seeds: Vec<usize> = iter.next().unwrap().trim().split(':').last().unwrap()
-        .split_whitespace().flat_map(str::parse::<usize>).collect();
+    let seeds_iter = iter.next().unwrap().trim().split(':').last().unwrap()
+        .split_whitespace().flat_map(str::parse::<usize>);
 
+    let mut lowest = usize::MAX;
     let mut maps: Vec<Vec<ValMap>> = Vec::with_capacity(7);
     for str in iter {
         let mut lines = str.lines();
@@ -63,8 +64,7 @@ pub fn process(input: &str) -> String {
         maps.push(map);
     }
 
-    let mut lowest = usize::MAX;
-    for seed in seeds {
+    for seed in seeds_iter {
         let seed = map(&maps[0], seed);
         let seed = map(&maps[1], seed);
         let seed = map(&maps[2], seed);

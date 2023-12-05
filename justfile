@@ -23,4 +23,4 @@ test-day day:
 		cargo nextest r -p day-{{day}}
 
 run day part:
-		cargo run -p day-{{day}} --bin part{{part}}
+		cargo run --release -p day-{{day}} --bin part{{part}}

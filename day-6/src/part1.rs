@@ -1,5 +1,5 @@
 
-fn get_races(input: &str) -> Vec<(i32, i32)> {
+fn get_races(input: &str) -> Vec<(u32, u32)> {
     let mut iter = input.lines();
     let mut first = iter.next().unwrap().split_whitespace();
     let mut second = iter.last().unwrap().split_whitespace();
@@ -7,13 +7,25 @@ fn get_races(input: &str) -> Vec<(i32, i32)> {
     first.next();
     second.next();
 
-    let mut result: Vec<(i32, i32)> = Vec::new();
+    let mut result: Vec<(u32, u32)> = Vec::new();
 
     while let (Some(time), Some(distance)) = (first.next(), second.next())  {
-        result.push((time.parse::<i32>().unwrap(), distance.parse::<i32>().unwrap()));
+        result.push((time.parse::<u32>().unwrap(), distance.parse::<u32>().unwrap()));
     }
 
     result
+
+}
+
+fn calc_wins(time: u32, dist: u32) -> u32 {
+
+    for press in 1..time {
+        if (time - press) * press > dist {
+            return (time - press * 2) + 1;
+        }
+    }
+
+    0
 
 }
 
@@ -25,12 +37,7 @@ pub fn process(input: &str) -> String {
 
     for race in races {
 
-        let mut count = 0;
-        (1..race.0).for_each(|time| {
-            if (race.0 - time) * time > race.1 {
-                count += 1;
-            }
-        });
+        let count = calc_wins(race.0, race.1);
 
         if result == 0 {
             result = count;

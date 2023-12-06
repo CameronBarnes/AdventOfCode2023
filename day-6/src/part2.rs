@@ -11,19 +11,23 @@ fn get_race(input: &str) -> (u64, u64) {
 
 }
 
+fn calc_wins(time: u64, dist: u64) -> u64 {
+
+    for press in 1..time {
+        if (time - press) * press > dist {
+            return (time - press * 2) + 1;
+        }
+    }
+
+    0
+
+}
+
 #[tracing::instrument]
 pub fn process(input: &str) -> String {
     
     let race = get_race(input);
-    let mut result: u64 = 0;
-
-    (1..race.0).for_each(|time| {
-        if (race.0 - time) * time > race.1 {
-            result += 1;
-        }
-    });
-
-    result.to_string()
+    calc_wins(race.0, race.1).to_string()
 
 }
 

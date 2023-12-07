@@ -8,7 +8,7 @@ down day:
 
 create day:
 		cargo generate --path ./daily-template --name day-{{day}}
-		down {{day}}
+		just down {{day}}
 
 bench-all:
 		cargo bench -q > benchmarks.txt

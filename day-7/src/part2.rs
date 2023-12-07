@@ -29,7 +29,7 @@ impl HandType {
     }
 }
 
-const CARD_ORD: &[&str] = &["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"];
+const CARD_ORD: &[&str] = &["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"];
 
 #[derive(Eq, PartialEq, Debug)]
 struct Hand {
@@ -62,7 +62,7 @@ fn get_hand_type(str: &str) -> HandType {
         },
         3 => {
             if let Some(num) = hash_map.get(&'J') {
-                if *num == 3 {
+                if *num >= 2 || hash_map.values().contains(&3) {
                     HandType::FourOfAKind
                 } else {
                     HandType::FullHouse

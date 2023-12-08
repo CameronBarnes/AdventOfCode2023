@@ -4,29 +4,15 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Debug, Clone, Copy)]
 enum HandType {
-    FiveOfAKind,
-    FourOfAKind,
-    FullHouse,
-    ThreeOfAKind,
-    TwoPair,
-    OnePair,
-    HighCard,
-}
-
-impl HandType {
-    fn score(&self) -> usize {
-        match self {
-            HandType::FiveOfAKind => 6,
-            HandType::FourOfAKind => 5,
-            HandType::FullHouse => 4,
-            HandType::ThreeOfAKind => 3,
-            HandType::TwoPair => 2,
-            HandType::OnePair => 1,
-            HandType::HighCard => 0,
-        }
-    }
+    FiveOfAKind = 6,
+    FourOfAKind = 5,
+    FullHouse = 4,
+    ThreeOfAKind = 3,
+    TwoPair = 2,
+    OnePair = 1,
+    HighCard = 0,
 }
 
 const CARD_ORD: &[&str] = &["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -86,7 +72,7 @@ fn card_score(c: char) -> usize {
 
 impl Ord for Hand {
     fn cmp(&self, other: &Self) -> Ordering {
-        let kind_ord = self.kind.score().cmp(&other.kind.score());
+        let kind_ord = (self.kind as u8).cmp(&(other.kind as u8));
         if kind_ord.is_eq() {
             for (a, b) in self.hand.chars().zip(other.hand.chars()) {
                 let card_ord = card_score(a).cmp(&card_score(b));

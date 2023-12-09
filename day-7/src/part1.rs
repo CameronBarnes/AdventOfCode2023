@@ -15,15 +15,6 @@ enum HandType {
     HighCard = 0,
 }
 
-const CARD_ORD: &[&str] = &["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
-
-#[derive(Eq, PartialEq, Debug)]
-struct Hand {
-    hand: String,
-    kind: HandType,
-    bid: usize,
-}
-
 fn get_hand_type(str: &str) -> HandType {
 
     let mut hash_map: HashMap<char, usize> = HashMap::new();
@@ -54,12 +45,7 @@ fn get_hand_type(str: &str) -> HandType {
 
 }
 
-impl Hand {
-    fn new(hand: String, bid: usize) -> Self {
-        let kind = get_hand_type(&hand);
-        Hand{hand, kind, bid}
-    }
-}
+const CARD_ORD: &[&str] = &["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 
 fn card_score(c: char) -> usize {
     for i in 0..CARD_ORD.len() {
@@ -68,6 +54,20 @@ fn card_score(c: char) -> usize {
         }
     }
     panic!("Invalid card entered");
+}
+
+#[derive(Eq, PartialEq, Debug)]
+struct Hand {
+    hand: String,
+    kind: HandType,
+    bid: u32,
+}
+
+impl Hand {
+    fn new(hand: String, bid: u32) -> Self {
+        let kind = get_hand_type(&hand);
+        Hand{hand, kind, bid}
+    }
 }
 
 impl Ord for Hand {
@@ -126,8 +126,8 @@ impl PartialOrd for Hand {
 
 fn parse_hand(str: &str) -> Hand {
 
-    let mut iter = str.split_whitespace();
-    Hand::new(iter.next().unwrap().to_owned(), iter.last().unwrap().parse().unwrap())
+    let (cards, bid) = str.split_once(' ').unwrap();
+    Hand::new(cards.to_owned(), bid.parse().unwrap())
 
 }
 
@@ -137,9 +137,9 @@ pub fn process(input: &str) -> String {
     let mut hands: Vec<Hand> = input.lines().map(parse_hand).collect();
     hands.sort();
 
-    let mut result: usize = 0;
+    let mut result: u32 = 0;
     (0..hands.len()).rev().for_each(|i| {
-        result += (i + 1) * hands[i].bid;
+        result += (i + 1) as u32 * hands[i].bid;
     });
 
     result.to_string()

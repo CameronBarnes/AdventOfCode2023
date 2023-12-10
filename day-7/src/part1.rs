@@ -47,10 +47,10 @@ fn get_hand_type(str: &str) -> HandType {
 
 const CARD_ORD: &[&str] = &["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 
-fn card_score(c: char) -> usize {
+fn card_score(c: char) -> u8 {
     for i in 0..CARD_ORD.len() {
         if CARD_ORD[i].eq(&c.to_string()) {
-            return i;
+            return i as u8;
         }
     }
     panic!("Invalid card entered");
@@ -58,29 +58,28 @@ fn card_score(c: char) -> usize {
 
 #[derive(Eq, PartialEq, Debug)]
 struct Hand {
-    hand: String,
+    hand: (u8, u8, u8, u8, u8),
     kind: HandType,
     bid: u32,
 }
 
 impl Hand {
-    fn new(hand: String, bid: u32) -> Self {
-        let kind = get_hand_type(&hand);
+    fn new(hand: &str, bid: u32) -> Self {
+        let kind = get_hand_type(hand);
+        let hand = parse_cards(hand);
         Hand{hand, kind, bid}
     }
+}
+
+fn parse_cards(hand: &str) -> (u8, u8, u8, u8, u8) {
+    hand.chars().map(card_score).tuples().next().unwrap()
 }
 
 impl Ord for Hand {
     fn cmp(&self, other: &Self) -> Ordering {
         let kind_ord = (self.kind as u8).cmp(&(other.kind as u8));
         if kind_ord.is_eq() {
-            for (a, b) in self.hand.chars().zip(other.hand.chars()) {
-                let card_ord = card_score(a).cmp(&card_score(b));
-                if card_ord.is_ne() {
-                    return card_ord.reverse();
-                }
-            }
-            Equal
+            other.hand.cmp(&self.hand)
         } else {
             kind_ord
         }
@@ -127,7 +126,7 @@ impl PartialOrd for Hand {
 fn parse_hand(str: &str) -> Hand {
 
     let (cards, bid) = str.split_once(' ').unwrap();
-    Hand::new(cards.to_owned(), bid.parse().unwrap())
+    Hand::new(cards, bid.parse().unwrap())
 
 }
 

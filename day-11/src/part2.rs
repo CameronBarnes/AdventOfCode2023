@@ -18,7 +18,7 @@ fn char_map_to_expanded_pos(map: &[Vec<char>], mult: usize) -> Vec<(usize, usize
             let mut y_offset: usize = 0;
             (0..y).for_each(|y_check| {
                 if map[y_check].iter().all(|c| *c == '.') {
-                    y_offset += mult;
+                    y_offset += mult - 1;
                 }
             });
 
@@ -27,7 +27,7 @@ fn char_map_to_expanded_pos(map: &[Vec<char>], mult: usize) -> Vec<(usize, usize
             }
         }
         if !found {
-            x_offset += mult;
+            x_offset += mult - 1;
         }
     }
 
@@ -82,6 +82,7 @@ mod tests {
 ..........
 .......#..
 #...#.....";
+        assert_eq!("374", process_for_num(input, 2));
         assert_eq!("1030", process_for_num(input, 10));
         assert_eq!("8410", process_for_num(input, 100));
     }

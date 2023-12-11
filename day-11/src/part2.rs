@@ -12,7 +12,7 @@ fn char_map_to_expanded_pos(map: &[Vec<char>], mult: usize) -> Vec<(usize, usize
 
     for x in 0..map[0].len() {
 
-        let found = true;
+        let mut found = true;
         for y in 0..map.len() {
 
             let mut y_offset: usize = 0;
@@ -24,6 +24,7 @@ fn char_map_to_expanded_pos(map: &[Vec<char>], mult: usize) -> Vec<(usize, usize
 
             if map[y][x] == '#' {
                 locations.push((y + y_offset, x + x_offset));
+                found = false;
             }
         }
         if !found {

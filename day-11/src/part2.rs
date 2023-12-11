@@ -39,23 +39,13 @@ fn char_map_to_expanded_pos(map: &[Vec<char>], mult: usize) -> Vec<(usize, usize
 fn process_for_num(input: &str, num: usize) -> String {
     let map = to_char_map(input);
     let locations = char_map_to_expanded_pos(&map, num);
-    let mut set = HashSet::with_capacity(locations.len().pow(2));
     let mut sum = 0;
     for a in 0..locations.len() {
-        for b in 0..locations.len() {
-            if a == b {
-                continue;
-            }
-            let calc = a + b;
-            let smaller = usize::min(a, b);
-            let bigger = calc - smaller;
-            if !set.contains(&(smaller, bigger)) {
-                set.insert((smaller, bigger));
-                let a = locations[a];
-                let b = locations[b];
-                let diff = (a.0.abs_diff(b.0), a.1.abs_diff(b.1));
-                sum += diff.0 + diff.1;
-            }
+        for b in a+1..locations.len() {
+            let a = locations[a];
+            let b = locations[b];
+            let diff = (a.0.abs_diff(b.0), a.1.abs_diff(b.1));
+            sum += diff.0 + diff.1;
         }
     }
     sum.to_string()

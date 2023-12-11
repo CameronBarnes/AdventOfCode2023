@@ -12,7 +12,7 @@ fn char_map_to_expanded_pos(map: &[Vec<char>], mult: usize) -> Vec<(usize, usize
 
     for x in 0..map[0].len() {
 
-        let mut found = true;
+        let mut not_found = true;
         for y in 0..map.len() {
 
             let mut y_offset: usize = 0;
@@ -24,10 +24,10 @@ fn char_map_to_expanded_pos(map: &[Vec<char>], mult: usize) -> Vec<(usize, usize
 
             if map[y][x] == '#' {
                 locations.push((y + y_offset, x + x_offset));
-                found = false;
+                not_found = false;
             }
         }
-        if !found {
+        if not_found {
             x_offset += mult - 1;
         }
     }
@@ -53,7 +53,7 @@ fn process_for_num(input: &str, num: usize) -> String {
 
 #[tracing::instrument]
 pub fn process(input: &str) -> String {
-    process_for_num(input, 1000000)
+    process_for_num(input, 1_000_000)
 }
 
 #[cfg(test)]
